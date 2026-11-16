@@ -1,0 +1,5 @@
+IF DB_ID(N'StockFlowDb')IS NULL
+BEGIN 
+	CREATE DATABASE StockFlowDb;
+END
+GO
