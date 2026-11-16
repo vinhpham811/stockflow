@@ -1,0 +1,28 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+TestResults/
+coverage/
+*.coverage
+coverage.cobertura.xml
+
+# Secrets - KHÔNG commit
+appsettings.Development.json
+appsettings.Local.json
+*.pfx
+.env
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+npm-debug.log*
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
