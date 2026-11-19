@@ -62,13 +62,19 @@ builder.Services.AddCors(options =>
         .AllowCredentials(); // Bắt buộc để trình duyệt gửi cookie refresh token
     });
 });
+// Bắt đầu khai báo Global Exception Handling
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+//Kết thúc Global Exception Handling
 
 var app = builder.Build();
 // ---------- Seed role + tài khoản admin ----------
 await IdentitySeeder.SeedAsync(app.Services, app.Configuration);
 
 // ---------- Pipeline (thứ tự quan trọng) ----------
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+//app.UseMiddleware<ExceptionHandlingMiddleware>(); //Chỉ dành cho tự viết Middleware loại thông thường để xử lý Exception Global
+// Trong pipeline: THAY dòng app.UseMiddleware<ExceptionHandlingMiddleware>(); bằng:
+app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
