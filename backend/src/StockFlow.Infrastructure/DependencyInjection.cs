@@ -5,7 +5,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using StockFlow.Application.Auth.Interfaces;
+using StockFlow.Domain.Common;
+using StockFlow.Domain.Products;
 using StockFlow.Infrastructure.Authentication;
+using StockFlow.Infrastructure.Events;
 using StockFlow.Infrastructure.Identity;
 using StockFlow.Infrastructure.Persistence;
 using StockFlow.Infrastructure.Persistence.Repositories;
@@ -43,6 +46,9 @@ namespace StockFlow.Infrastructure
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITokenService, JwtTokenService>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<DomainEventDispatcher>();
             AddJwtAuthentication(services, configuration);
             return services;
         }

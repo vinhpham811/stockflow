@@ -55,7 +55,7 @@ namespace StockFlow.Application.Tests.Auth
         [Fact]
         public async Task RegisterAsync_WithExistingEmail_ShouldThrowBadRequest()
         {
-            _userServiceMock.Setup(u => u.FindByEmailAsync("")).ReturnsAsync(_testUser);
+            _userServiceMock.Setup(u => u.FindByEmailAsync("user@test.com")).ReturnsAsync(_testUser);
             var request = new RegisterRequest("user@test.com", "Password1", "Test User");
             await Assert.ThrowsAsync<BadRequestException>(()=> _authService.RegisterAsync(request));
         }

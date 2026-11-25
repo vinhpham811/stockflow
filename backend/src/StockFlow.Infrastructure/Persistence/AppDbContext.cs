@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using StockFlow.Domain.Entities;
+using StockFlow.Domain.Products;
 using StockFlow.Infrastructure.Identity;
 using System;
 using System.Collections.Generic;
