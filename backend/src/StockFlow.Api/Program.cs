@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using StockFlow.Api.Extensions;
 using StockFlow.Api.MiddleWare;
 using StockFlow.Application;
 using StockFlow.Infrastructure;
@@ -87,7 +88,7 @@ app.UseHttpsRedirection();
 app.UseCors(FrontendCorsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.MapStockFlowHealthChecks();
 app.MapControllers();
 
 app.Run();

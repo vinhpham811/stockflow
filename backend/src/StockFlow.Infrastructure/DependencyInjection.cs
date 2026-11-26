@@ -22,16 +22,13 @@ namespace StockFlow.Infrastructure
 {
     public static class DependencyInjection
     {
+        /// <summary>
+        /// Dùng cho API: Persistence + Identity + JWT Authentication.
+        /// </summary>
         public static IServiceCollection AddInfrastructure (this IServiceCollection services, IConfiguration configuration)
-        { 
-            var connectionString = configuration.GetConnectionString("Default");
-            if (string.IsNullOrWhiteSpace(connectionString))
-            {
-                throw new InvalidOperationException("Connection string 'Default' is missing.");
-            }
+        {
 
-            services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(connectionString));
+            services.AddPersistence(configuration);
             services
                 .AddIdentityCore<ApplicationUser>(options =>
                 {
@@ -46,10 +43,32 @@ namespace StockFlow.Infrastructure
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITokenService, JwtTokenService>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+         
+            AddJwtAuthentication(services, configuration);
+            return services;
+        }
+        /// <summary>
+        /// Dùng chung cho API và Worker: DbContext, Repository, Unit of Work, Health check DB.
+        /// </summary>
+        public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
+        {
+            var connectionString = configuration.GetConnectionString("Default");
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new InvalidOperationException("Connection string 'Default' is missing.");
+            }
+
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(connectionString));
+
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<DomainEventDispatcher>();
-            AddJwtAuthentication(services, configuration);
+
+            // Health check: thử kết nối DB. Gắn tag "ready" để chỉ endpoint /health/ready chạy nó
+            services.AddHealthChecks()
+                .AddDbContextCheck<AppDbContext>("database", tags: new[] { "ready" });
+
             return services;
         }
         private static void AddJwtAuthentication(IServiceCollection services, IConfiguration configuration) {
